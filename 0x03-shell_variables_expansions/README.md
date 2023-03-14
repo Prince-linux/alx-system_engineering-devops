@@ -1,13 +1,5 @@
-# Shell, init files, variables and expansions
-
-Project done during **Full Stack Software Engineering studies** at **Holberton School**. It aims to learn about alias builtin, help builtin, local, global and reserved variables (PATH, HOME and PS1), special parameters `$?` and single an double quotes in **Shell**.
-
-## Technologies
-* Scripts written in Bash 4.3.11(1)
-* Tested on Ubuntu 14.04 LTS
-
 ## Files
-All of the following files are scripts:
+
 
 | Filename | Description |
 | -------- | ----------- |
@@ -17,8 +9,8 @@ All of the following files are scripts:
 | `3-paths` | Counts the number of the directories in the `PATH` |
 | `4-global_variables` | Lists environment variables |
 | `5-local_variables` | Lists all local variables and environment variables, and functions |
-| `6-create_local_variable` | Creates a new local variable named `BETTY` |
-| `7-create_global_variable` | Creates a new global variable named `HOLBERTON` |
+| `6-create_local_variable` | Creates a new local variable named `BEST` |
+| `7-create_global_variable` | Creates a new global variable named `BEST` |
 | `8-true_knowledge` | Prints the result of the addition of 128 with the value stored in the environment variable `TRUEKNOWLEDGE`, followed by a new line |
 | `9-divide_and_rule` | Prints the result of `POWER` divided by `DIVIDE`, followed by a new line |
 | `10-love_exponent_breath` | Displays the result of `BREATH` to the power `LOVE` |
