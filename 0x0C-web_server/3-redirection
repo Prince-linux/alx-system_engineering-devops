@@ -1,31 +1,25 @@
 #!/usr/bin/env bash
-#install ngix and have a file that returns the string "Hello World inside
+# Script that installs Nginx server and redirects /redirect_me
 
-sudo apt-get update
-sudo apt-get install nginx -y
-echo "Hello World!" | sudo tee /usr/share/nginx/html/index.html
+sudo apt update
+sudo apt install -y nginx
+sudo ufw allow 'Nginx HTTP'
+echo "Hello World!" | sudo tee /var/www/html/index.html
+# OR
+# echo "Hello World!" > index.html
+# sudo mv index.html /var/www/html
 
-new_config=\
-"server {
-        listen 80 default_server;
+echo "server {
+	listen 80 default_server;
         listen [::]:80 default_server;
-               root /var/www/html;
-        index index.html index.htm index.nginx-debian.html;
-        server_name _;
-        location / {
-                try_files \$uri \$uri/ =404;
-        }
-        
-        if (\$request_filename ~ redirect_me){
-            rewrite ^ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
-        }
-}
-"
 
-echo "$new_config" > /etc/nginx/sites-available/default
-if [ "$(pgrep nginx)" -le 0 ];
-then
-    service nginx start
-else
-    service nginx restart
-fi;
+        root /var/www/html;
+        index index.html;
+
+        location /redirect_me {
+                return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        }
+}" > default
+
+sudo mv -f default /etc/nginx/sites-available/default
+sudo service nginx restart
