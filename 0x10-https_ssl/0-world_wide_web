@@ -1,38 +1,18 @@
 #!/usr/bin/env bash
-# Bash script displays DNS records: record type, IP, subdomains
+#Configure your domain zone so that the subdomain www and display information about subdomains
 
-# Function to print DNS record information for a subdomain
-print_rec() {
-    domain="$1"
-    subdomain="$2"
-
-    # Use dig to fetch DNS information about the subdomain
-    dig_output=$(dig "$subdomain.$domain" +short)
-
-    if [ -z "$dig_output" ]; then
-        echo "The subdomain $subdomain does not exist."
-    else
-        record_type=$(dig "$subdomain.$domain" +short -t ANY | awk '{print $2}')
-        destination=$(dig "$subdomain.$domain" +short)
-        echo "The subdomain $subdomain is a $record_type record and points to $destination"
-    fi
-}
-
-# Main function
-main() {
-    if [ -z "$2" ]; then
-        for subs in "www" "lb-01" "web-01" "web-02"; do
-            print_rec "$1" "$subs"
-        done
-    else
-        print_rec "$1" "$2"
-    fi
-}
-
-# Check if both domain and subdomain are provided as arguments
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
+if [ "$#" = 1 ]
+then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub_domain in "${subdomains[@]}"
+    do
+	record_type=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
+        destination=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
+	echo "The subdomain $sub_domain is a $record_type record and points to $destination"
+    done
+elif [ "$#" = 2 ]
+then
+    record_type=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
+    destination=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
+    echo "The subdomain $2 is a $record_type record and points to $destination"
 fi
-
-main "$1" "$2"
