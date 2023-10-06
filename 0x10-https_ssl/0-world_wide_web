@@ -1,20 +1,38 @@
 #!/usr/bin/env bash
 # Bash script displays DNS records: record type, IP, subdomains
 
-print_rec ()
-{
-    printf "The subdomain %s is a " "$2"
-    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | awk -F' ' '{ printf $4 }'
-    printf " record and points to "
-    dig "$2.$1" | grep -A1 'ANSWER SECTION:' | awk -F' ' '{ printf $5 }'
-    echo ""
+# Function to print DNS record information for a subdomain
+print_rec() {
+    domain="$1"
+    subdomain="$2"
+
+    # Use dig to fetch DNS information about the subdomain
+    dig_output=$(dig "$subdomain.$domain" +short)
+
+    if [ -z "$dig_output" ]; then
+        echo "The subdomain $subdomain does not exist."
+    else
+        record_type=$(dig "$subdomain.$domain" +short -t ANY | awk '{print $2}')
+        destination=$(dig "$subdomain.$domain" +short)
+        echo "The subdomain $subdomain is a $record_type record and points to $destination"
+    fi
 }
 
-if [ -z "$2" ]; then
-   for subs in "www" "lb-01" "web-01" "web-02"
-   do
-       print_rec "$1" "$subs"
-   done
-else
-    print_rec "$1" "$2"
+# Main function
+main() {
+    if [ -z "$2" ]; then
+        for subs in "www" "lb-01" "web-01" "web-02"; do
+            print_rec "$1" "$subs"
+        done
+    else
+        print_rec "$1" "$2"
+    fi
+}
+
+# Check if both domain and subdomain are provided as arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
 fi
+
+main "$1" "$2"
