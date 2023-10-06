@@ -43,7 +43,7 @@ backend web-backend
 frontend proxynode
         bind *:80
 	mode http
-        bind *:443 ssl crt /etc/letsencrypt/live/www.dikalite.tech/fullchain.pem
+        bind *:443 ssl crt /etc/letsencrypt/live/www.peedor.tech/fullchain.pem
 	http-request redirect scheme https code 301 unless { ssl_fc }
         default_backend web-backend
 
@@ -92,7 +92,7 @@ backend web-backend
 frontend proxynode
         bind *:80
 	mode http
-        bind *:443 ssl crt /etc/letsencrypt/live/www.dikalite.tech/fullchain.pem
+        bind *:443 ssl crt /etc/letsencrypt/live/www.peedor.tech/fullchain.pem
 	http-request redirect scheme https code 301 unless { ssl_fc }
         default_backend web-backend
 
